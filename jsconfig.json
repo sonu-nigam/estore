@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "checkJs": true,
+    "target": "ES2015",
+    "module": "nodenext",
+    "declaration": true,
+  },
+  "include": ["src/**/*.d.ts", "src/**/*.js", "src/**/*.svelte"],
+  "exclude": ["node_modules", "**/node_modules", "dist"]
+}

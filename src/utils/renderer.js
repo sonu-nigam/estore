@@ -162,7 +162,7 @@ class Root {
     }
 
     /**
-    * @param {keyof HTMLElementTagNameMap | typeof HTMLElement} element 
+    * @param {keyof HTMLElementTagNameMap | typeof HTMLElement} [ element ] 
     */
     async _end(element) {
         if (element && String(element).toUpperCase() !== this.parentElement.nodeName){
@@ -176,6 +176,15 @@ class Root {
         this.previousChild = this.parentElement;
         this.parentElement = this.parentElement.parentElement;
         return this
+    }
+
+    async _finish () {
+        const currentElement = this.getCurrentElement();
+
+        while(currentElement !== this.root) {
+            this.addTask({fn: "_end", args: []})
+        }
+        return null
     }
 }
 
@@ -213,6 +222,11 @@ export default class Renderer {
     end(element) {
         this.tree.addTask({fn: "_end", args: [element]});
         return this 
+    }
+
+    finish () {
+        this.tree.addTask({fn: "_end", args: []})
+        return null
     }
 
     /**

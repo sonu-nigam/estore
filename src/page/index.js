@@ -5,6 +5,7 @@ import { HomePage } from "./HomePage";
 import { NotFoundPage } from "./NotFoundPage";
 import { ProductDetailPage } from "./ProductDetailPage";
 import { ProductsPage } from "./ProductsPage";
+import { TestPage } from "./TestPage";
 
 const routes = [
     {
@@ -16,6 +17,9 @@ const routes = [
     }, {
         path: "/products/123451",
         component: ProductDetailPage,
+    }, {
+        path: "/test",
+        component: TestPage,
     }, {
         path: "*",
         component: NotFoundPage 

@@ -1,17 +1,18 @@
 /**
  * @param {string} pathname 
- * @param {Array.<string>} routes 
+ * @param {Array.<{path: string, component: *}>} routes 
  */
 export function getMatchedRoutes (pathname, routes) {
     let catchAllRoute = null
 
     for(const route of routes) {
-        if (route === "/*") catchAllRoute = route
-        if (route === pathname) return [ route ]
-        if (route.includes("/:")) {
+        if (route.path === "/*") catchAllRoute = route
+        if (route.path === pathname) return { ...route, query: {}}
+
+        if (route.path.includes("/:")) {
             let idx = 0
             let pathTokens = pathname.split("/")
-            let routeTokens = route.split(/\//)
+            let routeTokens = route.path.split(/\//)
             while (idx < routeTokens.length) {
                 const currentVar = routeTokens[idx]
                 if (currentVar[0] === ":") {
@@ -21,9 +22,12 @@ export function getMatchedRoutes (pathname, routes) {
                         routeTokens[idx] = pathTokens[idx]
                     }
                     if (pathname === newRoute.join("/")) {
-                        return [ route, {
-                            [currentVar.substring(1)]: pathTokens[idx]
-                        } ]
+                        return { 
+                            ...route,
+                            query: {
+                                [currentVar.substring(1)]: pathTokens[idx]
+                            }
+                        }
                     }
                     if (pathTokens[idx] === undefined) break;
                 }
@@ -32,5 +36,5 @@ export function getMatchedRoutes (pathname, routes) {
         }
     }
 
-    return catchAllRoute ? [catchAllRoute] : null
+    return catchAllRoute ? ({...catchAllRoute, query: {}}) : null
 }

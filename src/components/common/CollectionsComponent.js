@@ -1,10 +1,40 @@
-import Root from "../../utils/renderer";
+import Renderer from "../../utils/renderer";
 
 /**
-    * @param {CollectionComponent} ctx
-    */
+ * @param {Renderer} tree
+ * @param {CollectionComponent} ctx
+ */
+const collectionItem = (tree, ctx) => {
+    
+    if (!ctx.collectionItems) return
+
+    for (const category of ctx.collectionItems) {
+        tree
+            .node("a", {
+                href: category.link,
+                onclick: ctx.onClickLink,
+                className: "block min-w-60"
+            })
+                .node("div", {className: ""})
+                    .node("img", {
+                        src: category.img,
+                        className: "bg-gray-200 w-full border-gray-300 border rounded-md"
+                    })
+                .end("div")
+                .node("div", {
+                    className: "mt-4"
+                })
+                    .text(category.title)
+                .end("div")
+            .end("a")
+    }
+}
+
+/**
+ * @param {CollectionComponent} ctx
+ */
 const render = (ctx) => {
-    new Root(ctx)
+    new Renderer(ctx)
         .node("div", {className: "mt-8 p-4"})
             .node("div", {className: "flex justify-between mb-10"})
                 .node("p")
@@ -12,36 +42,14 @@ const render = (ctx) => {
                 .end("p")
                 .node("a", {
                     href: ctx.getAttribute("view-all-link"),
-                    onclick: ctx.onClickViewAll(ctx.getAttribute("view-all-link"))
+                    onclick: ctx.onClickLink
                 })
                     .text("View all")
                 .end("a")
             .end("div")
             .node("div", {className: "w-full overflow-scroll pb-4"})
                 .node("div", {className: "flex gap-4"})
-                    .bind((currentCtx) => {
-                        if (!ctx.collectionItems) return
-
-                        for (const category of ctx.collectionItems) {
-                            currentCtx
-                                .node("a", {
-                                    href: category.link,
-                                    className: "block min-w-60"
-                                })
-                                    .node("div", {className: ""})
-                                        .node("img", {
-                                            src: category.img,
-                                            className: "bg-gray-200 w-full border-gray-300 border rounded-md"
-                                        })
-                                    .end("div")
-                                    .node("div", {
-                                        className: "mt-4"
-                                    })
-                                        .text(category.title)
-                                    .end("div")
-                                .end("a")
-                        }
-                    })
+                    .bind(collectionItem)
                 .end("div")
             .end("div")
         .end("div")
@@ -61,17 +69,12 @@ export class CollectionComponent extends HTMLElement {
     }
 
     /**
-        * @callback onClickEventHandler
-        * @param {MouseEvent} event
-        */
-    /**
-        * @param {string} pathname
-        * @returns {onClickEventHandler}
-        */
-
-    onClickViewAll = (pathname) => (event) => {
+     * @param {PointerEvent} event
+     */
+    onClickLink = (event) => {
         event.preventDefault()
-        history.pushState(null, "", pathname)
+        const path = event.currentTarget.attributes.href.value
+        history.pushState(null, "", path)
         const popStateEvent = new PopStateEvent('popstate', { state: null });
         dispatchEvent(popStateEvent);
     }

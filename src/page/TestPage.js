@@ -1,9 +1,22 @@
 import Renderer from "../utils/renderer"
 
 /**
+ * @param {Renderer} tree
  * @param {TestPage} ctx
  */
-const render = (ctx) => new Renderer(ctx)
+const showFrag = (tree, ctx) => {
+    if (ctx.show) {
+        tree.node("b").text("Showing").end("b")
+    } else {
+        tree.node("i").text("Not Showing").end("i") 
+    } 
+}
+
+/**
+ * @param {TestPage} ctx
+ */
+const render = (ctx) => {
+    new Renderer(ctx)
     .node("div", {className: "px-4"})
         .node("h3", {className: "text-3xl font-semibold mt-8"})
             .text("Product Listing")
@@ -11,15 +24,10 @@ const render = (ctx) => new Renderer(ctx)
         .node("button", {onclick: ctx.onClickButtton})
             .text("click me")
         .end("button")
+        .bind(showFrag)
     .end("div")
-    .bind((tree) => {
-        if (ctx.show) {
-            tree.node("b").text("Showing").end("b")
-        // } else {
-        //     tree.node("i").text("Not Showing").end("i") 
-        } 
-    })
     .finish()
+}
 
 
 /**

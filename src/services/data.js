@@ -1,7 +1,4 @@
-const { http, HttpResponse } = MockServiceWorker
-
-export default http.get("/products", () => {
-    return HttpResponse.json([
+export default [
         {
             "id": "123451",
             "title": "Medusa T-Shirt",
@@ -837,5 +834,4 @@ export default http.get("/products", () => {
                 }
             ]
         }
-    ])
-})
+]

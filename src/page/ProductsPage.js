@@ -1,22 +1,22 @@
 import { ProductList } from "../components/common/ProductListComponent";
+import { getProducts } from "../services/products";
 import Renderer from "../utils/renderer"
 
 const fetchData = async () => {
-    const res = await fetch('/products')
 
     /**
      * @typedef {Object} Category
-     * @prop {string} Category.title
-     * @prop {string} Category.link
-     * @prop {string} Category.img
-     * @prop {string} Category.id
-     * @prop {Array.<string>} Category.images
-     * @prop {Array.<{prices: Array.<{currency_code: string, amount: number}>}>} Category.variants
+     * @property {string} Category.title
+     * @property {string} Category.link
+     * @property {string} Category.img
+     * @property {string} Category.id
+     * @property {Array.<string>} Category.images
      */
+
     /**
      * @type {Array.<Category>} data
      */
-    const data = await res.json()
+    const data = await getProducts()
 
     const categoryList = data.map(item => ({
         title: item.title,

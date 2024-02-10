@@ -33,17 +33,18 @@ const render = (ctx) => {
     new Renderer(ctx)
         .node(HeaderComponent, {className: "block max-w-5xl mx-auto"}).end()
         .node("main", {className: "max-w-5xl mx-auto"})
-        .bind((currentCtx) => {
-            const currentRoute = routes
-                .find(route => location.pathname === route.path)
-            const notFoundRoute = routes
-                .find(route => route.path === "*")
-            if (currentRoute){
-                currentCtx.node(currentRoute.component).end()
-            } else {
-                currentCtx.node(notFoundRoute.component).end()
-            }
-        })
+            .bind((currentCtx) => {
+                const currentRoute = routes
+                    .find(route => location.pathname === route.path)
+                const notFoundRoute = routes
+                    .find(route => route.path === "*")
+                if (currentRoute){
+                    currentCtx.node(currentRoute.component).end()
+                } else {
+                    currentCtx.node(notFoundRoute.component).end()
+                }
+            })
+        .end("main")
         .node(FooterComponent, {className: "block max-w-5xl mx-auto"}).end()
 }
 

@@ -1,38 +1,8 @@
 /**
- * Priority
- * 1 => /static
- * 2 => /:dynamic
- * 3 => *
- */
-
-const Routes = [
-    "/",
-    "/admin",
-    "/products",
-    "/:slug",
-    "/products/123", 
-    "/*",
-    "/products/:id",
-    "/:slug/:id"
-]
-
-/**
- * @param {Array.<string>} routes
- * @returns {Array.<string>}
- */
-function routesListLinter (routes) {
-    return routes.map(route => (
-            route.endsWith("/") ? route.slice(0, - 1) : route
-        ).startsWith("/") ? route : ("/" + route))
-}
-
-const LintedRoutes = routesListLinter(Routes)
-
-/**
  * @param {string} pathname 
  * @param {Array.<string>} routes 
  */
-function getMatchedRoutes (pathname, routes) {
+export function getMatchedRoutes (pathname, routes) {
     let catchAllRoute = null
 
     for(const route of routes) {
@@ -64,7 +34,3 @@ function getMatchedRoutes (pathname, routes) {
 
     return catchAllRoute ? [catchAllRoute] : null
 }
-
-console.log(getMatchedRoutes("/product/12/hdjsjad/jfddjsa", LintedRoutes))
-
-// console.log(PathMatcher("/admin/user", Routes), "matcher")

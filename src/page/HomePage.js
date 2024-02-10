@@ -1,8 +1,8 @@
 import Renderer from "../utils/renderer";
 import { CollectionComponent } from "../components/common/CollectionsComponent";
+import { getProducts } from "../services/products";
 
 const fetchData = async () => {
-    const res = await fetch('/products')
 
     /**
      * @typedef {Object} Category
@@ -16,7 +16,7 @@ const fetchData = async () => {
     /**
      * @type {Array.<Category>} data
      */
-    const data = await res.json()
+    const data = await getProducts()
 
     const categoryList = data.map(item => ({
         title: item.title,

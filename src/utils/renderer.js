@@ -5,7 +5,7 @@
 
 class Root {
     /**
-    * @param {HTMLElement} ctx 
+    * @param {HTMLElement | DocumentFragment} ctx 
     */
     constructor(ctx) {
         this.root = ctx
@@ -54,9 +54,7 @@ class Root {
     }
 
     getCurrentElement() {
-        if (this.previousChild) {
-            return this.previousChild.nextSibling
-        }
+        if (this.previousChild) return this.previousChild.nextSibling
         return this.parentElement.firstChild
     }
 
@@ -80,7 +78,7 @@ class Root {
     }
 
     /**
-     * @param {keyof HTMLElementTagNameMap | typeof HTMLElement} element 
+     * @param {keyof HTMLElementTagNameMap | typeof HTMLElement | typeof DocumentFragment} element 
      * @returns {string | keyof HTMLElementTagNameMap}
      */
     _getNodeName(element) {
@@ -102,6 +100,10 @@ class Root {
                 );
             }
             return dashed.toUpperCase();
+        }
+
+        if (element instanceof DocumentFragment) {
+           return element.nodeName.toUpperCase() 
         }
         throw new DOMException(
             `${String(element)} is not a valid tag name`,
@@ -165,12 +167,15 @@ class Root {
     * @param {keyof HTMLElementTagNameMap | typeof HTMLElement} [ element ] 
     */
     async _end(element) {
-        if (element && String(element).toUpperCase() !== this.parentElement.nodeName){
-            throw new Error(`Wrong End tag is provided. Expected: ${element} Provided: ${this.parentElement.nodeName} in component ${this.root.nodeName}`)
+        if (element
+            && String(element).toUpperCase() !== this.parentElement.nodeName){
+            throw new Error(`Wrong End tag is provided.
+                Expected: ${element} Provided: ${this.parentElement.nodeName} 
+                in component ${this.root.nodeName}`)
         }
 
         while (this.previousChild?.nextSibling) {
-            this.parentElement.removeChild(this.previousChild.nextSibling)
+            this.previousChild.nextSibling?.remove()
         }
 
         this.previousChild = this.parentElement;
@@ -181,7 +186,7 @@ class Root {
     async _finish () {
         const currentElement = this.getCurrentElement();
 
-        while(currentElement !== this.root) {
+        while(currentElement && currentElement !== this.root) {
             this.addTask({fn: "_end", args: []})
         }
         return null
@@ -190,7 +195,7 @@ class Root {
 
 export default class Renderer {
     /**
-    * @param {HTMLElement} ctx 
+    * @param {HTMLElement | DocumentFragment} ctx 
     */
     constructor (ctx) {
         this.tree = new Root(ctx)
@@ -201,7 +206,7 @@ export default class Renderer {
     * @returns {this}
     */
     text(nodeValue) {
-        this.tree.addTask({fn: "_text", args: [String(nodeValue)]});
+        this.tree.addTask({fn: this.tree._text.name, args: [String(nodeValue)]});
         return this 
     }
 
@@ -211,7 +216,7 @@ export default class Renderer {
     * @returns {this}
     */
     node(element, props) {
-        this.tree.addTask({fn: "_node", args: [element, props]});
+        this.tree.addTask({fn: this.tree._node.name, args: [element, props]});
         return this 
     }
 
@@ -220,12 +225,12 @@ export default class Renderer {
     * @returns {this}
     */
     end(element) {
-        this.tree.addTask({fn: "_end", args: [element]});
+        this.tree.addTask({fn: this.tree._end.name, args: [element]});
         return this 
     }
 
     finish () {
-        this.tree.addTask({fn: "_end", args: []})
+        this.tree.addTask({fn: this.tree._finish.name, args: []})
         return null
     }
 

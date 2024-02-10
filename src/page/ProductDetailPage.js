@@ -1,18 +1,23 @@
+import { getProducts } from "../services/products"
 import { store } from "../store/store"
 import Renderer from "../utils/renderer"
 
 const fetchData = async () => {
-    const res = await fetch('/products')
 
-    /** @typedef {Object} Category @prop {string} Category.title
-     * @prop {string} Category.link
-     * @prop {string} Category.img
-     * @prop {string} Category.id
-     * @prop {Array.<string>} Category.images
-     * @prop {Array.<{prices: Array.<{currency_code: string, amount: number}>}>} Category.variants
+    /**
+     * @typedef {Object} Category
+     * @property {string} Category.title
+     * @property {string} Category.link
+     * @property {string} Category.img
+     * @property {string} Category.id
+     * @property {Array.<string>} Category.images
      */
-    /** @type {Array.<Category>} data */
-    const data = await res.json()
+
+    /**
+     * @type {Array.<Category>} data
+     */
+    const data = await getProducts()
+
     const categoryList = data.find(item => item.id === "123451")
     return categoryList
 }

@@ -1,5 +1,5 @@
 import { store } from "../../store/store";
-import Renderer from "../../utils/renderer";
+import Renderer from "active-dom";
 
 /**
     * @param {HeaderComponent} ctx
@@ -43,10 +43,6 @@ const render = (ctx) => {
     * @class {HTMLElement} HeaderComponent
     */
 export class HeaderComponent extends HTMLElement {
-    /** 
-        * @type {Array.<string>} observedAttributes
-        */
-    static observedAttributes = []
 
     constructor() {
         super()

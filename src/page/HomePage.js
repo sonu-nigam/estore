@@ -1,4 +1,5 @@
-import Renderer from "../utils/renderer";
+import Renderer from "active-dom"
+// import Renderer from "../utils/renderer";
 import { CollectionComponent } from "../components/common/CollectionsComponent";
 import { getProducts } from "../services/products";
 
@@ -31,20 +32,21 @@ const fetchData = async () => {
  */
 const render = (ctx) => new Renderer(ctx)
         .node(CollectionComponent, {
-            "view-all-link": "/products",
+            view_all_link: "/products",
             title: "Latest Drops",
-            $collectionItems: ctx.state.collectionItems
+            collectionItems: ctx.collectionItems,
         }).end()
         .node(CollectionComponent, {
-            "view-all-link": "/weekly-picks",
+            view_all_link: "/weekly-picks",
             title: "Weekly Picks",
-            $collectionItems: ctx.state.collectionItems
+            collectionItems: ctx.collectionItems
         }).end()
         .node(CollectionComponent, {
-            "view-all-link": "/sale",
+            view_all_link: "/sale",
             title: "Sale",
-            $collectionItems: ctx.state.collectionItems
+            collectionItems: ctx.collectionItems
         }).end()
+
 
 /**
  * @class HomePage
@@ -58,24 +60,11 @@ export class HomePage extends HTMLElement {
     constructor() {
         super()
     }
-  
-    #state = {}
-
-    get state () {
-        return this.#state
-    }
-
-    set state (value) {
-        this.#state = value 
-        render(this)
-    }
 
     async connectedCallback() {
-        const collectionItems = await fetchData()
-        this.state = {
-            ...this.state,
-            collectionItems
-        }
+        const response = await fetchData();
+        this.collectionItems = response
+        render(this);
     }
 }
 

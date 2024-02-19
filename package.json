@@ -28,5 +28,8 @@
       "src",
       "dist"
     ]
+  },
+  "dependencies": {
+    "active-dom": "^1.0.0"
   }
 }

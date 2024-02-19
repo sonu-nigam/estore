@@ -1,4 +1,5 @@
-import Renderer from "../../utils/renderer";
+import Renderer from "active-dom"
+// import Renderer from "../../utils/renderer";
 
 /**
  * @param {Renderer} tree
@@ -41,7 +42,7 @@ const render = (ctx) => {
                     .text(ctx.getAttribute("title"))
                 .end("p")
                 .node("a", {
-                    href: ctx.getAttribute("view-all-link"),
+                    href: ctx.getAttribute("view_all_link"),
                     onclick: ctx.onClickLink
                 })
                     .text("View all")
@@ -55,18 +56,17 @@ const render = (ctx) => {
         .end("div")
 }
 
+const INTERNAL_STATE = {}
+
 /**
     * @class {HTMLElement} CollectionComponent  
     */
 export class CollectionComponent extends HTMLElement {
-    /** 
-        * @type {Array.<string>} observedAttributes
-        */
-    static observedAttributes = ["title", "view-all-link"]
-
     constructor() {
         super()
     }
+
+    static observedAttributes = ["title", "view_all_link"]
 
     /**
      * @param {PointerEvent} event
@@ -79,15 +79,13 @@ export class CollectionComponent extends HTMLElement {
         dispatchEvent(popStateEvent);
     }
 
-    get $collectionItems () {
-        return this.collectionItems
+    get collectionItems () {
+        return INTERNAL_STATE.collectionItems
     }
 
-    /**
-        * @param {Object} value 
-        */
-    set $collectionItems (value) {
-        this.collectionItems = value
+    /** @param {Object} value */
+    set collectionItems (value) {
+        INTERNAL_STATE.collectionItems = value
         render(this)
     }
 

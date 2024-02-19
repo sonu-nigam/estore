@@ -1,6 +1,7 @@
 import { FooterComponent } from "../components/common/FooterComponent";
 import { HeaderComponent } from "../components/common/HeaderComponent";
-import Renderer from "../utils/renderer";
+// import Renderer from "../utils/renderer";
+import Renderer from "active-dom"
 import { getMatchedRoutes } from "../utils/router";
 import { HomePage } from "./HomePage";
 import { NotFoundPage } from "./NotFoundPage";
@@ -64,5 +65,4 @@ class RootElement extends HTMLElement {
     }
 }
 
-RootElement.hello = 123
 customElements.define("root-element", RootElement)

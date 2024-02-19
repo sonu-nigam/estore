@@ -140,15 +140,16 @@ class Root {
         const newProps = Object.keys(props)
         const allProps = new Set([...cacheProps, ...newProps])
         for (const prop of allProps) {
-            if (props[prop] !== currentElement[prop]) {
-                if (prop.startsWith("$")
-                    || prop === "className"
-                    || prop.startsWith("on")
-                ) {
-                    currentElement[prop] = props[prop];
-                } else {
-                    currentElement.setAttribute(prop, props[prop])
-                }
+            if (props[prop] === currentElement[prop]) continue;
+            if (prop.startsWith("$")
+                || prop === "className"
+                || prop.startsWith("on")
+            ) {
+                currentElement[prop] = props[prop];
+            } else if (prop === "style") {
+                Object.assign(currentElement[prop], props[prop])
+            } else {
+                currentElement.setAttribute(prop, props[prop])
             }
         }
 
@@ -169,9 +170,11 @@ class Root {
     async _end(element) {
         if (element
             && String(element).toUpperCase() !== this.parentElement.nodeName){
-            throw new Error(`Wrong End tag is provided.
-                Expected: ${element} Provided: ${this.parentElement.nodeName} 
-                in component ${this.root.nodeName}`)
+            throw new Error(
+                "Wrong End tag is provided. Expected: " +
+                element + " Provided: " + this.parentElement.nodeName +
+                " in component " + this.root.nodeName
+            )
         }
 
         while (this.previousChild?.nextSibling) {

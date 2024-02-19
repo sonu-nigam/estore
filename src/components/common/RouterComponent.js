@@ -1,10 +1,10 @@
-import Root from "../../utils/render";
+import Renderer from "active-dom";
 
 /**
     * @param {RouterComponent} ctx
     */
 const render = (ctx) => {
-    const root = new Root(ctx)
+    const root = new Renderer(ctx)
 
     const currentRoute = ctx.routes.find(route => route.path === location.pathname)
     const notFoundRoute = ctx.routes.find(route => route.path === "*")

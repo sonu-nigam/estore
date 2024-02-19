@@ -1,4 +1,4 @@
-import Renderer from "../utils/renderer"
+import Renderer from "active-dom"
 
 export class NotFoundPage extends HTMLElement {
     constructor() {

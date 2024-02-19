@@ -1,6 +1,6 @@
 import { ProductList } from "../components/common/ProductListComponent";
 import { getProducts } from "../services/products";
-import Renderer from "../utils/renderer"
+import Renderer from "active-dom"
 
 const fetchData = async () => {
 
